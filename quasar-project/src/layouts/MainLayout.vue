@@ -79,10 +79,10 @@ const linksList = [
     link: '#/combat'
   },
   {
-    title: 'Twitter',
-    caption: '@quasarframework',
+    title: 'O nama',
+    caption: 'Nešto malo o našoj ekipi',
     icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
+    link: '#/Onama'
   },
   {
     title: 'Facebook',
