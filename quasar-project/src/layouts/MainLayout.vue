@@ -62,7 +62,7 @@ const linksList = [
   },
   {
     title: 'O igri',
-    caption: 'github.com/quasarframework',
+    caption: 'Opis naše igrice gdje se korisnik može upoznati sa pričom i radnjom unutar virtualnog svijeta',
     icon: 'code',
     link: '#/about'
   },
@@ -73,10 +73,10 @@ const linksList = [
     link: '#/Likovi'
   },
   {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
+    title: 'Combat',
+    caption: 'Detalji o borbama koji se događaju unutar igrice',
     icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
+    link: '#/combat'
   },
   {
     title: 'Twitter',
