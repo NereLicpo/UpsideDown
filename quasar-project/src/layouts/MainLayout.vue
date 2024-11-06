@@ -67,10 +67,10 @@ const linksList = [
     link: '#/about'
   },
   {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
+    title: 'Likovi',
+    caption: 'O likovima u igrici',
     icon: 'chat',
-    link: 'https://chat.quasar.dev'
+    link: '#/Likovi'
   },
   {
     title: 'Forum',
