@@ -58,13 +58,13 @@ const linksList = [
     title: 'Docs',
     caption: 'quasar.dev',
     icon: 'school',
-    link: 'https://quasar.dev'
+    link: '#/'
   },
   {
-    title: 'Github',
+    title: 'O igri',
     caption: 'github.com/quasarframework',
     icon: 'code',
-    link: 'https://github.com/quasarframework'
+    link: '#/about'
   },
   {
     title: 'Discord Chat Channel',
