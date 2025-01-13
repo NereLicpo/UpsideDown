@@ -89,7 +89,7 @@ const linksList = [
     title: 'Patch Notes',
     caption: '@QuasarFramework',
     icon: 'code',
-    link: 'https://facebook.quasar.dev'
+    link: '#/Notes'
   },
   {
     title: 'Kontakt',
