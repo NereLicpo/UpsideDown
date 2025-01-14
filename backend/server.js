@@ -37,6 +37,18 @@ app.get('/api/developer-notes', (req, res) => {
   });
 });
 
+app.post('/api/messages', (req, res) => {
+  const { ime, email, poruka } = req.body;
+  const query = 'INSERT INTO Kontakti (ime, email, poruka) VALUES (?, ?, ?)';
+  db.query(query, [ime, email, poruka], (err, results) => {
+    if (err) {
+      res.status(500).json({ error: err });
+    } else {
+      res.json({ message: 'Message saved successfully', id: results.insertId });
+    }
+  });
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

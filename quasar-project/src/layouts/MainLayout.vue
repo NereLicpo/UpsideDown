@@ -13,7 +13,7 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          UpsideDown
         </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
@@ -57,25 +57,25 @@ defineOptions({
 const linksList = [
   {
     title: 'Početna stranica',
-    caption: 'quasar.dev',
+    caption: '',
     icon: 'home',
     link: '#/'
   },
   {
     title: 'O igri',
-    caption: 'Opis naše igrice gdje se korisnik može upoznati sa pričom i radnjom unutar virtualnog svijeta',
+    caption: '',
     icon: 'search',
     link: '#/about'
   },
   {
     title: 'Likovi',
-    caption: 'O likovima u igrici',
+    caption: '',
     icon: 'person',
     link: '#/Likovi'
   },
   {
     title: 'Combat',
-    caption: 'Detalji o borbama koji se događaju unutar igrice',
+    caption: '',
     icon: 'star',
     link: '#/combat'
   },
@@ -87,15 +87,15 @@ const linksList = [
   },
   {
     title: 'Patch Notes',
-    caption: '@QuasarFramework',
+    caption: '',
     icon: 'code',
     link: '#/Notes'
   },
   {
     title: 'Kontakt',
-    caption: 'Community Quasar projects',
+    caption: '',
     icon: 'info',
-    link: 'https://awesome.quasar.dev'
+    link: '#/Kontakti'
   }
 ];
 
