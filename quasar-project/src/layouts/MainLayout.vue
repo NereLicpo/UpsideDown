@@ -12,9 +12,7 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
-          UpsideDown
-        </q-toolbar-title>
+        <q-toolbar-title> UpsideDown </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
@@ -47,56 +45,75 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import EssentialLink from 'components/EssentialLink.vue';
+import { ref } from "vue";
+import EssentialLink from "components/EssentialLink.vue";
 
 defineOptions({
-  name: 'MainLayout'
+  name: "MainLayout",
 });
 
 const linksList = [
   {
-    title: 'Početna stranica',
-    caption: '',
-    icon: 'home',
-    link: '#/'
+    title: "Početna stranica",
+    caption: "",
+    icon: "home",
+    link: "/",
   },
   {
-    title: 'O igri',
-    caption: '',
-    icon: 'search',
-    link: '#/about'
+    title: "O igri",
+    caption: "",
+    icon: "search",
+    link: "/about",
   },
   {
-    title: 'Likovi',
-    caption: '',
-    icon: 'person',
-    link: '#/Likovi'
+    title: "Likovi",
+    caption: "",
+    icon: "emoji_people",
+    link: "/Likovi",
+  },
+
+  {
+    title: "O nama",
+    caption: "Nešto malo o našoj ekipi",
+    icon: "person",
+    link: "/Onama",
   },
   {
-    title: 'Combat',
-    caption: '',
-    icon: 'star',
-    link: '#/combat'
+    title: "Patch Notes",
+    caption: "",
+    icon: "description",
+    link: "/Notes",
   },
   {
-    title: 'O nama',
-    caption: 'Nešto malo o našoj ekipi',
-    icon: 'person',
-    link: '#/Onama'
+    title: "Kontakt",
+    caption: "",
+    icon: "contact_support",
+    link: "/Kontakti",
   },
   {
-    title: 'Patch Notes',
-    caption: '',
-    icon: 'code',
-    link: '#/Notes'
+    title: "Community",
+    caption: "",
+    icon: "groups",
+    link: "/Community",
   },
   {
-    title: 'Kontakt',
-    caption: '',
-    icon: 'info',
-    link: '#/Kontakti'
-  }
+    title: "Download",
+    caption: "",
+    icon: "download",
+    link: "/Download",
+  },
+  {
+    title: "Leaderboards",
+    caption: "",
+    icon: "leaderboard",
+    link: "/LeaderBoards",
+  },
+  {
+    title: "Login",
+    caption: "",
+    icon: "login",
+    link: "/Login",
+  },
 ];
 
 const leftDrawerOpen = ref(false);
