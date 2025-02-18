@@ -53,6 +53,32 @@ app.get("/api/developer-notes", (req, res) => {
     }
   });
 });
+// Endpoint za dodavanje Developer Notes
+app.post("/api/developer-notes", (req, res) => {
+  const { title, content, category, priority, author } = req.body;
+
+  if (!title || !content || !category || !priority || !author) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  const query = `
+    INSERT INTO DeveloperNotes (Title, Content, Category, Priority, Author, CreatedAt, UpdatedAt) 
+    VALUES (?, ?, ?, ?, ?, NOW(), NOW())`;
+
+  db.query(
+    query,
+    [title, content, category, priority, author],
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: "Database error", details: err });
+      }
+      res.json({
+        message: "Developer Note added successfully",
+        id: results.insertId,
+      });
+    }
+  );
+});
 
 app.post("/api/messages", (req, res) => {
   const { ime, email, poruka } = req.body;
