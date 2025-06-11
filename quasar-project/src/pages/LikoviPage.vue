@@ -32,22 +32,20 @@ export default {
     return {
       monsters: [
         {
-          name: "Košmarog",
-          description:
-            "Grozomorno biće prekriveno gmizajućim očima, koje vreba u drevnim ruševinama.",
-          image: "/images/mosnter1.webp",
+          name: "Ice Ghoul",
+          description: "Grozomorno biće prekriveno ledom.",
+          image: "/images/IceGhoulBattler.png",
         },
         {
-          name: "Noćni tragać",
-          description:
-            "Zlokobno stvorenje s užarenim crvenim očima, skriveno u maglovitoj šumi.",
-          image: "/images/monster2.webp",
+          name: "Insect Man",
+          description: "Polu čovjek polu kukac, kreće se tiho, ali smrtonosno",
+          image: "/images/InsectManBattler.png",
         },
         {
-          name: "Ante Progonitelj",
+          name: "Not Deer",
           description:
-            "Kostur s užarenim zelenim očima, koji progoni groblje u ponoćnim satima.",
-          image: "/images/monster3.webp",
+            "Izgleda kao jelen — dok ne bude prekasno da shvatiš da nije.",
+          image: "/images/NotDeerSprite.png",
         },
       ],
     };
@@ -90,7 +88,7 @@ export default {
 }
 
 .monster-card {
-  background: rgba(20, 20, 20, 0.9);
+  background: #1e1e1e;
   color: #fff;
   border-radius: 12px;
   padding: 20px;

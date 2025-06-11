@@ -102,17 +102,25 @@ const linksList = [
     icon: "download",
     link: "/Download",
   },
-  {
-    title: "Leaderboards",
-    caption: "",
-    icon: "leaderboard",
-    link: "/LeaderBoards",
-  },
+
   {
     title: "Login",
     caption: "",
     icon: "login",
     link: "/Login",
+  },
+  {
+    title: "Register",
+    caption: "",
+    icon: "login",
+    link: "/Register",
+  },
+
+  {
+    title: "Admin",
+    caption: "",
+    icon: "leaderboard",
+    link: "/admin",
   },
 ];
 

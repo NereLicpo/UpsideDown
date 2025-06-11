@@ -14,13 +14,14 @@ const routes = [
       { path: "Kontakti", component: () => import("pages/KontaktiPage.vue") },
       { path: "Community", component: () => import("pages/CommunityPage.vue") },
       { path: "Download", component: () => import("pages/DownloadPage.vue") },
-      {
-        path: "Leaderboards",
-        component: () => import("pages/LeaderboardsPage.vue"),
-      },
+
       {
         path: "Login",
         component: () => import("pages/LoginPage.vue"),
+      },
+      {
+        path: "Register",
+        component: () => import("pages/RegisterPage.vue"),
       },
       {
         path: "/admin",

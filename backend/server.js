@@ -138,6 +138,43 @@ app.post("/api/logout", (req, res) => {
   }
 });
 
+// Register route
+app.post("/api/register", (req, res) => {
+  const { email, password } = req.body;
+  const role = "user"; // default role
+
+  if (!email || !password) {
+    return res.status(400).json({ error: "Missing email or password" });
+  }
+
+  if (password.length < 6) {
+    return res
+      .status(400)
+      .json({ error: "Password must be at least 6 characters long" });
+  }
+
+  const checkQuery = "SELECT * FROM Users WHERE email = ?";
+  db.query(checkQuery, [email], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Database error", details: err });
+    }
+
+    if (results.length > 0) {
+      return res.status(409).json({ error: "Email already registered" });
+    }
+
+    const insertQuery =
+      "INSERT INTO Users (email, password, role) VALUES (?, ?, ?)";
+    db.query(insertQuery, [email, password, role], (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: "Failed to register user" });
+      }
+
+      res.json({ message: "User registered successfully" });
+    });
+  });
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

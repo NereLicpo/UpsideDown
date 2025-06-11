@@ -12,7 +12,7 @@
         <div class="synopsis-section">
           <div class="text-h6 text-orange">O Igri</div>
           <p class="synopsis-text">
-            Igrač preuzima kontrolu nad Krunom, u likom zarobljenim u
+            Igrač preuzima kontrolu nad Erikom, u likom zarobljenim u
             raspadnutom svijetu punom strašnih nakaza.<br />
             Glavni cilj igre je preživjeti, pronaći hranu i vodu, ali i očuvati
             zdrav razum dok se suočava s vlastitim unutarnjim demonima i užasima

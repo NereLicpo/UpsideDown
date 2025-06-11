@@ -25,7 +25,7 @@
       </div>
       <div class="detail">
         <h3>Vrijeme igranja</h3>
-        <p>10-15 sati</p>
+        <p>3-4 sati</p>
       </div>
     </div>
     <div class="synopsis">
@@ -47,7 +47,7 @@ export default {
       platform: "PC",
       playerMode: "Single-player",
       synopsis:
-        "Igrač preuzima kontrolu nad Krunom, ubicom zarobljenim u raspadnutom svijetu punom stravičnih nakaza. Glavni cilj igre je preživjeti, pronaći hranu i vodu, ali i očuvati zdrav razum dok se suočava s vlastitim unutarnjim demonima i užasima vanjskog svijeta.",
+        "Igrač preuzima kontrolu nad Erikom, čovjekom zarobljenim u raspadnutom svijetu punom stravičnih nakaza. Glavni cilj igre je preživjeti, ali i očuvati zdrav razum dok se suočava s vlastitim unutarnjim demonima i užasima vanjskog svijeta.",
     };
   },
 };
