@@ -79,7 +79,7 @@ const linksList = [
     link: "/Onama",
   },
   {
-    title: "Patch Notes",
+    title: "Developer Notes",
     caption: "",
     icon: "description",
     link: "/Notes",

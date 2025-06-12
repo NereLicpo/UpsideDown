@@ -14,7 +14,7 @@
             class="q-ma-md"
             flat
             bordered
-            style="background-color: #2d2d2d; width: 300px;"
+            style="background-color: #2d2d2d; width: 300px"
           >
             <q-card-section class="text-center">
               <h3 class="text-yellow text-h6">E-mail</h3>
@@ -26,7 +26,7 @@
             class="q-ma-md"
             flat
             bordered
-            style="background-color: #2d2d2d; width: 300px;"
+            style="background-color: #2d2d2d; width: 300px"
           >
             <q-card-section class="text-center">
               <h3 class="text-yellow text-h6">Telefon</h3>
@@ -40,7 +40,7 @@
           <q-card
             flat
             bordered
-            style="background-color: #2d2d2d; max-width: 600px; width: 100%;"
+            style="background-color: #2d2d2d; max-width: 600px; width: 100%"
           >
             <q-card-section>
               <h3 class="text-center text-yellow text-h6">Kontakt Forma</h3>
@@ -51,6 +51,7 @@
                   label="Vaše ime"
                   class="q-my-sm custom-input"
                   clearable
+                  data-test="contact-name"
                 />
                 <q-input
                   v-model="form.email"
@@ -59,6 +60,7 @@
                   type="email"
                   class="q-my-sm custom-input"
                   clearable
+                  data-test="contact-email"
                 />
                 <q-input
                   v-model="form.poruka"
@@ -67,12 +69,14 @@
                   type="textarea"
                   class="q-my-sm custom-input"
                   clearable
+                  data-test="contact-message"
                 />
                 <q-btn
                   type="submit"
                   color="red"
                   label="Pošalji"
                   class="full-width q-my-sm"
+                  data-test="contact-submit"
                 />
               </q-form>
             </q-card-section>

@@ -12,6 +12,7 @@
           type="email"
           filled
           class="q-mb-md"
+          data-test="email"
         />
         <q-input
           v-model="password"
@@ -19,6 +20,7 @@
           type="password"
           filled
           class="q-mb-md"
+          data-test="password"
         />
       </q-card-section>
 
@@ -29,9 +31,14 @@
           color="primary"
           @click="login"
           class="full-width"
+          data-test="login-button"
         />
       </q-card-actions>
-      <q-card-section v-if="error" class="text-negative">
+      <q-card-section
+        v-if="error"
+        class="text-negative"
+        data-test="error-message"
+      >
         {{ error }}
       </q-card-section>
     </q-card>

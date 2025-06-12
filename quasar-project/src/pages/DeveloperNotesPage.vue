@@ -3,37 +3,42 @@
     <div class="pixel-text-bubble">
       <q-card flat bordered class="q-pa-md transparent-bg">
         <div class="text-h6 q-mb-md">Developer Notes</div>
-        <div class="dev-notes-container">
+        <div class="dev-notes-container" data-test="developer-notes">
           <q-card
             v-for="note in notes"
             :key="note.NoteID"
             flat
             bordered
             class="dev-note-card q-mb-md"
+            data-test="note-card"
           >
             <q-card-section>
-              <div class="text-h6 text-orange q-mb-sm">{{ note.Title }}</div>
-              <div class="text-body2 q-mb-sm">{{ note.Content }}</div>
+              <div class="text-h6 text-orange q-mb-sm" data-test="note-title">
+                {{ note.Title }}
+              </div>
+              <div class="text-body2 q-mb-sm" data-test="note-content">
+                {{ note.Content }}
+              </div>
             </q-card-section>
             <q-separator />
             <q-card-section>
-              <div class="text-body2">
+              <div class="text-body2" data-test="note-category">
                 <strong>Category:</strong> {{ note.Category }}
               </div>
-              <div class="text-body2">
+              <div class="text-body2" data-test="note-priority">
                 <strong>Priority:</strong> {{ note.Priority }}
               </div>
-              <div class="text-body2">
+              <div class="text-body2" data-test="note-author">
                 <strong>Author:</strong> {{ note.Author }}
               </div>
-              <div class="text-body2">
+              <div class="text-body2" data-test="note-status">
                 <strong>Status:</strong> {{ note.Status }}
               </div>
-              <div class="text-body2">
+              <div class="text-body2" data-test="note-created">
                 <strong>Created At:</strong>
                 {{ new Date(note.CreatedAt).toLocaleString() }}
               </div>
-              <div class="text-body2">
+              <div class="text-body2" data-test="note-updated">
                 <strong>Updated At:</strong>
                 {{ new Date(note.UpdatedAt).toLocaleString() }}
               </div>
