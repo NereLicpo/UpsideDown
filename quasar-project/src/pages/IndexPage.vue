@@ -6,6 +6,7 @@
         Uronite u mračni svijet gdje razum dolazi na kušnju.
       </p>
     </div>
+
     <div class="game-details">
       <div class="detail">
         <h3>Žanr</h3>
@@ -58,8 +59,7 @@ export default {
 body {
   margin: 0;
   font-family: "Creepster", cursive; /* Strašan font */
-  background: url("https://via.placeholder.com/1600x900?text=Dark+Horror+Background")
-    center/cover no-repeat;
+
   color: #f8f8f8;
 }
 

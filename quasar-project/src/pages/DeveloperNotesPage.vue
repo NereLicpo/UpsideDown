@@ -1,45 +1,47 @@
 <template>
   <q-page class="q-pa-md">
-    <q-card flat bordered class="q-pa-md transparent-bg">
-      <div class="text-h6 q-mb-md">Developer Notes</div>
-      <div class="dev-notes-container">
-        <q-card
-          v-for="note in notes"
-          :key="note.NoteID"
-          flat
-          bordered
-          class="dev-note-card q-mb-md"
-        >
-          <q-card-section>
-            <div class="text-h6 text-orange q-mb-sm">{{ note.Title }}</div>
-            <div class="text-body2 q-mb-sm">{{ note.Content }}</div>
-          </q-card-section>
-          <q-separator />
-          <q-card-section>
-            <div class="text-body2">
-              <strong>Category:</strong> {{ note.Category }}
-            </div>
-            <div class="text-body2">
-              <strong>Priority:</strong> {{ note.Priority }}
-            </div>
-            <div class="text-body2">
-              <strong>Author:</strong> {{ note.Author }}
-            </div>
-            <div class="text-body2">
-              <strong>Status:</strong> {{ note.Status }}
-            </div>
-            <div class="text-body2">
-              <strong>Created At:</strong>
-              {{ new Date(note.CreatedAt).toLocaleString() }}
-            </div>
-            <div class="text-body2">
-              <strong>Updated At:</strong>
-              {{ new Date(note.UpdatedAt).toLocaleString() }}
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
-    </q-card>
+    <div class="pixel-text-bubble">
+      <q-card flat bordered class="q-pa-md transparent-bg">
+        <div class="text-h6 q-mb-md">Developer Notes</div>
+        <div class="dev-notes-container">
+          <q-card
+            v-for="note in notes"
+            :key="note.NoteID"
+            flat
+            bordered
+            class="dev-note-card q-mb-md"
+          >
+            <q-card-section>
+              <div class="text-h6 text-orange q-mb-sm">{{ note.Title }}</div>
+              <div class="text-body2 q-mb-sm">{{ note.Content }}</div>
+            </q-card-section>
+            <q-separator />
+            <q-card-section>
+              <div class="text-body2">
+                <strong>Category:</strong> {{ note.Category }}
+              </div>
+              <div class="text-body2">
+                <strong>Priority:</strong> {{ note.Priority }}
+              </div>
+              <div class="text-body2">
+                <strong>Author:</strong> {{ note.Author }}
+              </div>
+              <div class="text-body2">
+                <strong>Status:</strong> {{ note.Status }}
+              </div>
+              <div class="text-body2">
+                <strong>Created At:</strong>
+                {{ new Date(note.CreatedAt).toLocaleString() }}
+              </div>
+              <div class="text-body2">
+                <strong>Updated At:</strong>
+                {{ new Date(note.UpdatedAt).toLocaleString() }}
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+      </q-card>
+    </div>
   </q-page>
 </template>
 
@@ -108,5 +110,14 @@ export default {
 /* Styling for card sections */
 .q-card-section {
   padding: 10px;
+}
+.pixel-text-bubble {
+  border: 4px solid black;
+  padding: 12px;
+  font-family: "Press Start 2P", monospace;
+  font-size: 14px;
+
+  line-height: 1.5;
+  image-rendering: pixelated;
 }
 </style>

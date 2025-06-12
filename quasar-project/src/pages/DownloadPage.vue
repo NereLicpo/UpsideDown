@@ -6,7 +6,7 @@
         <q-btn
           v-if="fileUrl"
           :href="fileUrl"
-          download="developer_file"
+          download="UpsideDown.exe"
           label="Download File"
           color="primary"
         />
@@ -20,7 +20,8 @@ import { ref } from "vue";
 
 export default {
   setup() {
-    const fileUrl = ref("/path-to-developer-file.ext"); // Change this to your actual file path
+    // URL mora biti relativan prema 'public' folderu
+    const fileUrl = ref("/game/UpsideDown.exe");
     return { fileUrl };
   },
 };
