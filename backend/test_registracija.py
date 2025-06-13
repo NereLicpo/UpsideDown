@@ -1,41 +1,50 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.keys import Keys
 import time
 
-# ⚙️ Pokreće Chrome (preuzmi chromedriver ako nemaš)
 driver = webdriver.Chrome()
 
 try:
-    print("Navigating to http://localhost:9000/#/registracija...")
-    driver.get("http://localhost:9000/#/registracija")
+    print("🔗 Otvaranje stranice za registraciju...")
+    driver.get("http://localhost:9000/register")
+    time.sleep(2)  # sačekaj da se Quasar mounta
 
-    print("Waiting for page to load...")
-    time.sleep(2)
-
-    # 🎯 Selektori na temelju labela (Quasar renderira inpute unutar divova)
-    print("Finding form elements...")
+    print("🔍 Pronalazak input polja...")
     inputs = driver.find_elements(By.TAG_NAME, "input")
+
+    if len(inputs) < 3:
+        raise Exception("❌ Nisu pronađena sva input polja (email, password, confirm password).")
+
     email_input = inputs[0]
     password_input = inputs[1]
     confirm_input = inputs[2]
 
-    print("Filling out the form...")
+    print("⌨️ Unos test podataka...")
     test_email = f"test_{int(time.time())}@example.com"
     email_input.send_keys(test_email)
     password_input.send_keys("lozinka123")
     confirm_input.send_keys("lozinka123")
 
-    print("Form fields filled successfully.")
-
-    # 🔘 Klikni Register gumb
-    print("Clicking submit button...")
+    print("🖱 Klik na 'Register' dugme...")
     button = driver.find_element(By.XPATH, "//button[contains(., 'Register')]")
     button.click()
 
-    print("Waiting for registration success...")
+    print("⏳ Čekanje odgovora sa servera...")
     time.sleep(3)
 
-    # ✅ Provjera poruke uspjeha
-    body_text = driver.find_element
+    print("🔍 Provera rezultata registracije...")
+
+    # Proveri da li se prikazala poruka o uspehu
+    success_elements = driver.find_elements(By.XPATH, "//*[contains(@class, 'text-positive')]")
+    error_elements = driver.find_elements(By.XPATH, "//*[contains(@class, 'text-negative')]")
+
+    if success_elements:
+        print(f"✅ Registracija uspješna: {success_elements[0].text}")
+    elif error_elements:
+        print(f"❌ Greška prilikom registracije: {error_elements[0].text}")
+    else:
+        print("⚠️ Nema prikazanih poruka – moguće da nešto nije u redu sa Vue prikazom.")
+
+finally:
+    print("🧹 Zatvaranje browsera...")
+    driver.quit()
