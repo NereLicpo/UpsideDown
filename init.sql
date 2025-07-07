@@ -1,0 +1,33 @@
+CREATE TABLE Users (
+    id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('user', 'admin') NOT NULL DEFAULT 'user',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE DeveloperNotes (
+    NoteID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    Title VARCHAR(255) NOT NULL,
+    Content TEXT NOT NULL,
+    Category VARCHAR(100) DEFAULT NULL,
+    Priority ENUM('Low', 'Medium', 'High') DEFAULT 'Medium',
+    Author VARCHAR(100) DEFAULT NULL,
+    CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    Status ENUM('Open', 'In Progress', 'Resolved', 'Closed') DEFAULT 'Open',
+    PRIMARY KEY (NoteID)
+);
+
+CREATE TABLE Kontakti (
+    id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    ime VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    poruka TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);
+
+INSERT INTO Users (email, password, role)
+VALUES ('admin', 'admin', 'admin');
