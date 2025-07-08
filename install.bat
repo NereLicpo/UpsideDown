@@ -26,7 +26,7 @@ REM  BACKEND
 REM =============================
 echo [INFO] Instaliram backend ovisnosti...
 pushd backend
-npm install || exit /b 0
+call npm install || exit /b 0
 popd
 echo [OK] Backend instaliran.
 pause
@@ -38,13 +38,13 @@ REM  FRONTEND - QUASAR
 REM =============================
 echo [INFO] Instaliram frontend (Quasar) ovisnosti...
 pushd quasar-project
-npm install || exit /b 0
+call npm install || exit /b 0
 
 REM Provjera Quasar CLI
 where quasar >nul 2>nul
 IF %ERRORLEVEL% NEQ 0 (
     echo [INFO] Instaliram Quasar CLI...
-    npm install -g @quasar/cli || exit /b 0
+    call npm install -g @quasar/cli || exit /b 0
 ) ELSE (
     echo [OK] Quasar CLI je već instaliran.
 )
