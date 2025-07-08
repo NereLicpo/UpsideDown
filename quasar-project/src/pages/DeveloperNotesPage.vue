@@ -62,7 +62,7 @@ export default {
   methods: {
     fetchNotes() {
       axios
-        .get("http://localhost:3000/api/developer-notes")
+        .get("https://upsidedown-api.onrender.com/api/developer-notes")
         .then((response) => {
           this.notes = response.data;
         })

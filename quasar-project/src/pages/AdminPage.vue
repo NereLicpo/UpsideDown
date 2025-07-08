@@ -64,7 +64,7 @@ export default {
     const addNote = async () => {
       try {
         await axios.post(
-          "http://localhost:3000/api/developer-notes",
+          "https://upsidedown-api.onrender.com/api/developer-notes",
           note.value
         );
         alert("Developer Note added successfully!");
@@ -84,7 +84,7 @@ export default {
     const logout = async () => {
       try {
         await axios.post(
-          "http://localhost:3000/api/logout",
+          "https://upsidedown-api.onrender.com/api/logout",
           {},
           { withCredentials: true }
         );

@@ -87,7 +87,7 @@ export default {
 
       try {
         const response = await axios.post(
-          "http://localhost:3000/api/register",
+          "https://upsidedown-api.onrender.com/api/register",
           { email: email.value, password: password.value },
           {
             headers: { "Content-Type": "application/json" },
