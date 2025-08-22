@@ -48,10 +48,30 @@ export default {
       platform: "PC",
       playerMode: "Single-player",
       synopsis:
-        "Igrač preuzima kontrolu nad Erikom, čovjekom zarobljenim u raspadnutom svijetu...",
+        "Igrač preuzima kontrolu nad Erikom, čovjekom zarobljenim u raspadnutom svijetu punom stravičnih nakaza. Glavni cilj igre je preživjeti, ali i očuvati zdrav razum dok se suočava s vlastitim unutarnjim demonima i užasima vanjskog svijeta.",
     };
   },
   mounted() {
+    // Učitaj gtag.js ako ga još nema
+    if (!document.querySelector("#ga-script")) {
+      const script = document.createElement("script");
+      script.id = "ga-script";
+      script.async = true;
+      script.src = "https://www.googletagmanager.com/gtag/js?id=G-5CTD4LMBBF";
+      document.head.appendChild(script);
+
+      script.onload = () => {
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          window.dataLayer.push(arguments);
+        }
+        window.gtag = gtag;
+        gtag("js", new Date());
+        gtag("config", "G-5CTD4LMBBF");
+      };
+    }
+
+    // Event kad netko dođe na ovu stranicu
     if (typeof window.gtag === "function") {
       window.gtag("event", "page_view", {
         page_title: this.gameTitle,
