@@ -4,60 +4,56 @@ const cors = require("cors");
 const session = require("express-session");
 
 const app = express();
-const PORT = process.env.PORT || 3000; // Render koristi dinamički port
+const PORT = 3000;
 
 // Middleware
+
 app.use(
   session({
-    secret: "ante", // U produkciji koristi jači ključ!
+    secret: "ante", // Change this to a strong secret
     resave: false,
     saveUninitialized: false,
-    cookie: {
-      secure: true, // HTTPS zahtijeva secure cookie
-      sameSite: "none", // Za cross-origin (frontend i backend na različitim domenama)
-    },
+    cookie: { secure: false }, // Set to `true` in production with HTTPS
   })
 );
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// CORS konfiguracija
 app.use(
   cors({
-    origin: "https://upsidedown-spa.onrender.com", // frontend domena
-    credentials: true, // omogućuje cookieje i sessione
+    origin: "http://localhost:9000", // Adjust to your frontend port
+    credentials: true, // Allow cookies to be sent
   })
 );
 
 // Database connection
 const db = mysql.createConnection({
-  host: "ucka.veleri.hr",
-  user: "kmrkalj",
-  password: "11",
-  database: "kmrkalj",
+  host: "ucka.veleri.hr", // Change to your DB host
+  user: "kmrkalj", // Change to your DB user
+  password: "11", // Change to your DB password
+  database: "kmrkalj", // Change to your DB name
 });
 
 db.connect((err) => {
   if (err) {
-    console.error("Greška pri spajanju na bazu:", err);
+    console.error("Error connecting to the database:", err);
   } else {
-    console.log("Spojeno na bazu podataka.");
+    console.log("Connected to the database");
   }
 });
 
-// === ROUTES ===
-
-// Dohvati sve DeveloperNotes
+// Endpoint to fetch developer notes
 app.get("/api/developer-notes", (req, res) => {
   const query = "SELECT * FROM DeveloperNotes";
   db.query(query, (err, results) => {
-    if (err) return res.status(500).json({ error: err });
-    res.json(results);
+    if (err) {
+      res.status(500).json({ error: err });
+    } else {
+      res.json(results);
+    }
   });
 });
-
-// Dodaj novi DeveloperNote
+// Endpoint za dodavanje Developer Notes
 app.post("/api/developer-notes", (req, res) => {
   const { title, content, category, priority, author } = req.body;
 
@@ -66,106 +62,120 @@ app.post("/api/developer-notes", (req, res) => {
   }
 
   const query = `
-    INSERT INTO DeveloperNotes (Title, Content, Category, Priority, Author, CreatedAt, UpdatedAt)
+    INSERT INTO DeveloperNotes (Title, Content, Category, Priority, Author, CreatedAt, UpdatedAt) 
     VALUES (?, ?, ?, ?, ?, NOW(), NOW())`;
 
   db.query(
     query,
     [title, content, category, priority, author],
     (err, results) => {
-      if (err) return res.status(500).json({ error: err });
-      res.json({ message: "Developer Note dodan", id: results.insertId });
+      if (err) {
+        return res.status(500).json({ error: "Database error", details: err });
+      }
+      res.json({
+        message: "Developer Note added successfully",
+        id: results.insertId,
+      });
     }
   );
 });
 
-// Spremi poruku iz kontakta
 app.post("/api/messages", (req, res) => {
   const { ime, email, poruka } = req.body;
   const query = "INSERT INTO Kontakti (ime, email, poruka) VALUES (?, ?, ?)";
   db.query(query, [ime, email, poruka], (err, results) => {
-    if (err) return res.status(500).json({ error: err });
-    res.json({ message: "Poruka spremljena", id: results.insertId });
-  });
-});
-
-// Login ruta
-app.post("/api/login", (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({ error: "Nedostaje email ili lozinka" });
-  }
-
-  const query = "SELECT * FROM Users WHERE email = ? AND password = ?";
-  db.query(query, [email, password], (err, results) => {
-    if (err) return res.status(500).json({ error: err });
-
-    if (results.length > 0) {
-      req.session.user = { id: results[0].id, role: results[0].role };
-      return res.json({ message: "Login uspješan", role: results[0].role });
+    if (err) {
+      res.status(500).json({ error: err });
     } else {
-      return res.status(401).json({ error: "Neispravni podaci" });
+      res.json({ message: "Message saved successfully", id: results.insertId });
     }
   });
 });
 
-// Provjera autentikacije
+//Login Route
+app.post("/api/login", (req, res) => {
+  console.log("Received login request:", req.body); // Debugging
+
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: "Missing email or password" });
+  }
+
+  const query = "SELECT * FROM Users WHERE email = ? AND password = ?";
+  db.query(query, [email, password], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err });
+    }
+    if (results.length > 0) {
+      req.session.user = { id: results[0].id, role: results[0].role };
+      return res.json({ message: "Login successful", role: results[0].role });
+    } else {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+  });
+});
+
 app.get("/api/check-auth", (req, res) => {
   if (req.session.user) {
     res.json({ role: req.session.user.role });
   } else {
-    res.status(401).json({ error: "Niste prijavljeni" });
+    res.status(401).json({ error: "Not authenticated" });
   }
 });
 
-// Logout ruta
+//Logout route
 app.post("/api/logout", (req, res) => {
   if (req.session) {
     req.session.destroy((err) => {
-      if (err) return res.status(500).json({ error: "Greška pri odjavi" });
-      res.clearCookie("connect.sid");
+      if (err) {
+        return res.status(500).json({ error: "Logout failed" });
+      }
+      res.clearCookie("connect.sid"); // Clears session cookie
       res.json({ success: true });
     });
   } else {
-    res.status(400).json({ error: "Nema aktivne sesije" });
+    res.status(400).json({ error: "No active session" });
   }
 });
 
-// Registracija korisnika
+// Register route
 app.post("/api/register", (req, res) => {
   const { email, password } = req.body;
-  const role = "user";
+  const role = "user"; // default role
 
   if (!email || !password) {
-    return res.status(400).json({ error: "Email i lozinka su obavezni" });
+    return res.status(400).json({ error: "Missing email or password" });
   }
 
   if (password.length < 6) {
     return res
       .status(400)
-      .json({ error: "Lozinka mora imati barem 6 znakova" });
+      .json({ error: "Password must be at least 6 characters long" });
   }
 
   const checkQuery = "SELECT * FROM Users WHERE email = ?";
   db.query(checkQuery, [email], (err, results) => {
-    if (err) return res.status(500).json({ error: err });
+    if (err) {
+      return res.status(500).json({ error: "Database error", details: err });
+    }
 
     if (results.length > 0) {
-      return res.status(409).json({ error: "Email je već registriran" });
+      return res.status(409).json({ error: "Email already registered" });
     }
 
     const insertQuery =
       "INSERT INTO Users (email, password, role) VALUES (?, ?, ?)";
     db.query(insertQuery, [email, password, role], (err, results) => {
-      if (err)
-        return res.status(500).json({ error: "Greška pri registraciji" });
-      res.json({ message: "Uspješna registracija" });
+      if (err) {
+        return res.status(500).json({ error: "Failed to register user" });
+      }
+
+      res.json({ message: "User registered successfully" });
     });
   });
 });
 
-// Pokretanje servera
+// Start the server
 app.listen(PORT, () => {
-  console.log(`Server je pokrenut na portu ${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });

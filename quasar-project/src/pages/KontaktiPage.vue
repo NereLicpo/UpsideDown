@@ -103,16 +103,13 @@ export default {
     async handleSubmit() {
       if (this.form.ime && this.form.email && this.form.poruka) {
         try {
-          const response = await fetch(
-            "https://upsidedown-api.onrender.com/api/messages",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(this.form),
-            }
-          );
+          const response = await fetch("http://localhost:3000/api/messages", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(this.form),
+          });
 
           if (response.ok) {
             alert("Poruka uspješno poslana!");
