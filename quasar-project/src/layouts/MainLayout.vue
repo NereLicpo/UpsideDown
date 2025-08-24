@@ -122,6 +122,12 @@ const linksList = [
     icon: "leaderboard",
     link: "/admin",
   },
+  {
+    title: "Logout",
+    caption: "",
+    icon: "login",
+    link: "/Logout",
+  },
 ];
 
 const leftDrawerOpen = ref(false);

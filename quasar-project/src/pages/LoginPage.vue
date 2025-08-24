@@ -8,7 +8,7 @@
       <q-card-section>
         <q-input
           v-model="email"
-          label="Email"
+          label="Username"
           type="email"
           filled
           class="q-mb-md"

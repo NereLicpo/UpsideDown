@@ -1,137 +1,201 @@
 <template>
-  <q-page class="flex flex-center">
-    <q-card class="q-pa-md" style="width: 400px">
-      <q-card-section>
-        <q-input
-          v-model="message"
-          label="Enter your message"
-          outlined
-          class="q-mb-md"
-        />
-        <q-file
-          v-model="file"
-          label="Upload an image"
-          accept="image/*"
-          @update:model-value="onFileChange"
-          multiple
-        >
-          <template v-slot:append>
-            <q-icon name="cloud_upload" />
-          </template>
-        </q-file>
+  <div class="q-pa-md">
+    <!-- Upozorenje za nelogirane -->
+    <q-banner v-if="!isLoggedIn" class="bg-red text-white q-mb-md" dense>
+      <div class="row items-center justify-between">
+        <div>⚠️ Morate biti prijavljeni da biste mogli objaviti poruku.</div>
         <q-btn
-          label="Send"
-          color="primary"
-          class="q-mt-md"
-          @click="sendMessage"
+          flat
+          color="white"
+          label="Prijavi se"
+          @click="goToLogin"
+          class="q-ml-md"
         />
-      </q-card-section>
-      <q-card-section>
-        <div v-for="(msg, index) in messages" :key="index" class="q-mb-md">
-          <div class="chat-message">
-            <p>{{ msg.text }}</p>
-            <div v-if="msg.images.length" class="image-container">
-              <q-img
-                v-for="(img, imgIndex) in msg.images"
-                :key="imgIndex"
-                :src="img"
-                class="full-width"
-                style="max-height: 200px; margin-top: 10px"
-              />
-            </div>
-            <q-btn
-              label="Delete"
-              color="negative"
-              @click="deleteMessage(index)"
-              class="q-mt-md"
-            />
-          </div>
+      </div>
+    </q-banner>
+
+    <!-- Forma za unos poruke -->
+    <q-form @submit.prevent="submitPost" class="q-mb-md custom-post">
+      <q-input
+        v-model="message"
+        type="textarea"
+        outlined
+        autogrow
+        label="✍️ Unesi svoju poruku"
+        counter
+        maxlength="500"
+        class="custom-input"
+        :rules="[(val) => !!val || 'Poruka je obavezna']"
+        :disable="!isLoggedIn"
+      />
+
+      <q-btn
+        label="Objavi"
+        type="submit"
+        color="primary"
+        class="q-mt-sm"
+        :loading="isSubmitting"
+        :disable="!isLoggedIn"
+      />
+    </q-form>
+
+    <q-separator spaced class="text-white" />
+
+    <!-- Lista poruka -->
+    <div
+      v-for="post in posts"
+      :key="post.id"
+      class="q-mt-md q-pa-md custom-post hover-effect"
+    >
+      <div class="row items-center justify-between">
+        <!-- Autor -->
+        <div class="text-white">
+          <b>{{ post.author }}</b>
         </div>
-      </q-card-section>
-    </q-card>
-  </q-page>
+        <!-- Datum -->
+        <div class="text-grey-5 text-caption">
+          {{ formatDate(post.created_at) }}
+        </div>
+      </div>
+
+      <!-- Poruka -->
+      <div class="q-mt-sm text-white">
+        {{ post.message }}
+      </div>
+    </div>
+  </div>
 </template>
 
-<script>
-import { ref } from "vue";
+<script setup>
+import { ref, onMounted, onBeforeUnmount } from "vue";
+import axios from "axios";
+import { Notify } from "quasar";
+import { useRouter } from "vue-router";
 
-export default {
-  setup() {
-    const file = ref(null);
-    const message = ref("");
-    const messages = ref(JSON.parse(localStorage.getItem("messages")) || []);
+const message = ref("");
+const posts = ref([]);
+const isSubmitting = ref(false);
+const isLoggedIn = ref(false);
+const backendUrl = "http://localhost:3000";
+let intervalId = null;
 
-    const onFileChange = (selectedFiles) => {
-      if (selectedFiles) {
-        file.value = Array.from(selectedFiles);
-      }
-    };
+const router = useRouter();
 
-    const sendMessage = () => {
-      if (message.value || file.value) {
-        const newMessage = {
-          text: message.value,
-          images: [],
-        };
+// Provjera da li je korisnik logiran
+async function checkAuth() {
+  try {
+    await axios.get(backendUrl + "/api/check-auth", { withCredentials: true });
+    isLoggedIn.value = true;
+  } catch {
+    isLoggedIn.value = false;
+  }
+}
 
-        if (file.value && file.value.length) {
-          let imagesLoaded = 0;
-          file.value.forEach((imageFile, index) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              newMessage.images.push(e.target.result);
-              imagesLoaded++;
-              if (imagesLoaded === file.value.length) {
-                messages.value.push(newMessage);
-                localStorage.setItem(
-                  "messages",
-                  JSON.stringify(messages.value)
-                );
-                message.value = "";
-                file.value = null;
-              }
-            };
-            reader.readAsDataURL(imageFile);
-          });
-        } else {
-          messages.value.push(newMessage);
-          localStorage.setItem("messages", JSON.stringify(messages.value));
-          message.value = "";
-          file.value = null;
-        }
-      }
-    };
+// Redirect na login
+function goToLogin() {
+  router.push("/login");
+}
 
-    const deleteMessage = (index) => {
-      messages.value.splice(index, 1);
-      localStorage.setItem("messages", JSON.stringify(messages.value));
-    };
+// Submit poruke
+async function submitPost() {
+  if (!message.value.trim() || isSubmitting.value) return;
 
-    return {
-      file,
-      message,
-      messages,
-      onFileChange,
-      sendMessage,
-      deleteMessage,
-    };
-  },
-};
+  if (!isLoggedIn.value) {
+    Notify.create({
+      message: "Morate biti prijavljeni da pošaljete poruku",
+      color: "negative",
+    });
+    return;
+  }
+
+  isSubmitting.value = true;
+  try {
+    await axios.post(
+      backendUrl + "/api/community",
+      { message: message.value },
+      { withCredentials: true }
+    );
+    message.value = "";
+    await loadPosts();
+  } catch (err) {
+    console.error(err);
+    Notify.create({
+      message: "Greška kod slanja poruke",
+      color: "negative",
+    });
+  } finally {
+    isSubmitting.value = false;
+  }
+}
+
+// Load poruka
+async function loadPosts() {
+  try {
+    const res = await axios.get(backendUrl + "/api/community", {
+      withCredentials: true,
+    });
+    posts.value = res.data.sort(
+      (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    );
+  } catch (err) {
+    console.error("Greška kod učitavanja poruka:", err);
+  }
+}
+
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleString("hr-HR");
+}
+
+// On mount: provjeri auth i pokreni live refresh
+onMounted(() => {
+  checkAuth();
+  loadPosts();
+  intervalId = setInterval(loadPosts, 5000);
+});
+
+onBeforeUnmount(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 </script>
 
-<style scoped>
-.q-card {
-  max-width: 100%;
-}
-.chat-message {
-  padding: 10px;
-  border: 1px solid #ccc;
+<style>
+.custom-post {
+  background-color: transparent;
+  border: 1px solid white;
   border-radius: 8px;
-  background-color: #f9f9f9;
+  padding: 10px;
+  color: white;
+  transition: all 0.2s ease;
 }
-.image-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+
+.custom-input .q-field__native {
+  color: white !important;
+  background-color: transparent !important;
+}
+
+.custom-input .q-field__label,
+.custom-input .q-field__label.q-field--floating-label {
+  color: white !important;
+}
+
+.custom-input .q-field__native::placeholder {
+  color: white !important;
+}
+
+.hover-effect:hover {
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.q-separator {
+  border-color: white;
+}
+
+.custom-input.q-field--focused {
+  border: 2px solid white !important;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
 }
 </style>

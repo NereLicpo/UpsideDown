@@ -28,6 +28,10 @@ const routes = [
         component: () => import("pages/AdminPage.vue"),
         meta: { requiresAdmin: true },
       },
+      {
+        path: "Logout",
+        component: () => import("pages/LogoutPage.vue"),
+      },
     ],
   },
 

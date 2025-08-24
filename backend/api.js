@@ -174,6 +174,50 @@ app.post("/api/register", (req, res) => {
     });
   });
 });
+// ================== COMMUNITY API ==================
+
+// Dodavanje nove poruke
+app.post("/api/community", (req, res) => {
+  const { message } = req.body;
+
+  // korisnik mora biti logiran
+  if (!req.session.user) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+
+  const user_id = req.session.user.id;
+
+  if (!message || message.trim() === "") {
+    return res.status(400).json({ error: "Message is required" });
+  }
+
+  const query = "INSERT INTO Community (user_id, message) VALUES (?, ?)";
+  db.query(query, [user_id, message], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Database error", details: err });
+    }
+    res.json({
+      message: "Post created successfully",
+      id: results.insertId,
+    });
+  });
+});
+
+// Dohvat svih poruka
+app.get("/api/community", (req, res) => {
+  const query = `
+    SELECT c.id, c.message, c.created_at, u.email AS author
+    FROM Community c
+    JOIN Users u ON c.user_id = u.id
+    ORDER BY c.created_at DESC
+  `;
+  db.query(query, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Database error", details: err });
+    }
+    res.json(results);
+  });
+});
 
 // Start the server
 app.listen(PORT, () => {

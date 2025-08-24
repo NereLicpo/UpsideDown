@@ -31,3 +31,12 @@ CREATE TABLE Kontakti (
 
 INSERT INTO Users (email, password, role)
 VALUES ('admin', 'admin', 'admin');
+
+
+CREATE TABLE Community (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(id)
+);
