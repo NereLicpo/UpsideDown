@@ -128,6 +128,12 @@ const linksList = [
     icon: "login",
     link: "/Logout",
   },
+   {
+    title: "Trgovina",
+    caption: "",
+    icon: "login",
+    link: "/trgovina",
+  },
 ];
 
 const leftDrawerOpen = ref(false);

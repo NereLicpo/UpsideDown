@@ -5,33 +5,21 @@ const routes = [
     children: [
       { path: "", component: () => import("pages/IndexPage.vue") },
       { path: "about", component: () => import("pages/OigriPage.vue") },
-      { path: "Likovi", component: () => import("pages/LikoviPage.vue") },
-      { path: "Onama", component: () => import("pages/oNamaPage.vue") },
+      { path: "likovi", component: () => import("pages/LikoviPage.vue") },
+      { path: "onama", component: () => import("pages/ONamaPage.vue") },
+      { path: "notes", component: () => import("pages/DeveloperNotesPage.vue") },
+      { path: "kontakti", component: () => import("pages/KontaktiPage.vue") },
+      { path: "community", component: () => import("pages/CommunityPage.vue") },
+      { path: "download", component: () => import("pages/DownloadPage.vue") },
+      { path: "login", component: () => import("pages/LoginPage.vue") },
+      { path: "register", component: () => import("pages/RegisterPage.vue") },
       {
-        path: "Notes",
-        component: () => import("pages/DeveloperNotesPage.vue"),
-      },
-      { path: "Kontakti", component: () => import("pages/KontaktiPage.vue") },
-      { path: "Community", component: () => import("pages/CommunityPage.vue") },
-      { path: "Download", component: () => import("pages/DownloadPage.vue") },
-
-      {
-        path: "Login",
-        component: () => import("pages/LoginPage.vue"),
-      },
-      {
-        path: "Register",
-        component: () => import("pages/RegisterPage.vue"),
-      },
-      {
-        path: "/admin",
+        path: "admin",
         component: () => import("pages/AdminPage.vue"),
         meta: { requiresAdmin: true },
       },
-      {
-        path: "Logout",
-        component: () => import("pages/LogoutPage.vue"),
-      },
+      { path: "logout", component: () => import("pages/LogoutPage.vue") },
+      { path: "trgovina", component: () => import("pages/TrgovinaPage.vue") },
     ],
   },
 
