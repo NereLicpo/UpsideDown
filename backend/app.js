@@ -4,7 +4,9 @@ const cors = require("cors");
 const session = require("express-session");
 
 const app = express();
+const PORT = 3000;
 
+// Middleware
 app.use(
   session({
     secret: "ante",
@@ -39,7 +41,32 @@ db.connect((err) => {
   }
 });
 
-// Routes
+// ===================== PROIZVODI =====================
+
+// Dohvat svih proizvoda
+app.get("/api/products", (req, res) => {
+  const query = "SELECT * FROM Products";
+  db.query(query, (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json(results);
+  });
+});
+
+// Dodavanje novog proizvoda
+app.post("/api/products", (req, res) => {
+  const { name, description, price, image } = req.body;
+  if (!name || !description || !price || !image) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  const query = "INSERT INTO Products (name, description, price, image) VALUES (?, ?, ?, ?)";
+  db.query(query, [name, description, price, image], (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json({ message: "Product added", id: results.insertId });
+  });
+});
+
+// ===================== DEVELOPER NOTES =====================
 app.get("/api/developer-notes", (req, res) => {
   const query = "SELECT * FROM DeveloperNotes";
   db.query(query, (err, results) => {
@@ -77,5 +104,101 @@ app.post("/api/developer-notes", (req, res) => {
   );
 });
 
-// Export for testing
-module.exports = app;
+// ===================== MESSAGES =====================
+app.post("/api/messages", (req, res) => {
+  const { ime, email, poruka } = req.body;
+  const query = "INSERT INTO Kontakti (ime, email, poruka) VALUES (?, ?, ?)";
+  db.query(query, [ime, email, poruka], (err, results) => {
+    if (err) {
+      res.status(500).json({ error: err });
+    } else {
+      res.json({ message: "Message saved successfully", id: results.insertId });
+    }
+  });
+});
+
+// ===================== LOGIN/REGISTER =====================
+app.post("/api/login", (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ error: "Missing email or password" });
+
+  const query = "SELECT * FROM Users WHERE email = ? AND password = ?";
+  db.query(query, [email, password], (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    if (results.length > 0) {
+      req.session.user = { id: results[0].id, role: results[0].role };
+      return res.json({ message: "Login successful", role: results[0].role });
+    } else {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+  });
+});
+
+app.get("/api/check-auth", (req, res) => {
+  if (req.session.user) res.json({ role: req.session.user.role });
+  else res.status(401).json({ error: "Not authenticated" });
+});
+
+app.post("/api/logout", (req, res) => {
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) return res.status(500).json({ error: "Logout failed" });
+      res.clearCookie("connect.sid");
+      res.json({ success: true });
+    });
+  } else {
+    res.status(400).json({ error: "No active session" });
+  }
+});
+
+app.post("/api/register", (req, res) => {
+  const { email, password } = req.body;
+  const role = "user";
+
+  if (!email || !password) return res.status(400).json({ error: "Missing email or password" });
+  if (password.length < 6) return res.status(400).json({ error: "Password must be at least 6 characters long" });
+
+  const checkQuery = "SELECT * FROM Users WHERE email = ?";
+  db.query(checkQuery, [email], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error", details: err });
+    if (results.length > 0) return res.status(409).json({ error: "Email already registered" });
+
+    const insertQuery = "INSERT INTO Users (email, password, role) VALUES (?, ?, ?)";
+    db.query(insertQuery, [email, password, role], (err, results) => {
+      if (err) return res.status(500).json({ error: "Failed to register user" });
+      res.json({ message: "User registered successfully" });
+    });
+  });
+});
+
+// ===================== COMMUNITY =====================
+app.post("/api/community", (req, res) => {
+  const { message } = req.body;
+  if (!req.session.user) return res.status(401).json({ error: "Not authenticated" });
+  const user_id = req.session.user.id;
+  if (!message || message.trim() === "") return res.status(400).json({ error: "Message is required" });
+
+  const query = "INSERT INTO Community (user_id, message) VALUES (?, ?)";
+  db.query(query, [user_id, message], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error", details: err });
+    res.json({ message: "Post created successfully", id: results.insertId });
+  });
+});
+
+app.get("/api/community", (req, res) => {
+  const query = `
+    SELECT c.id, c.message, c.created_at, u.email AS author
+    FROM Community c
+    JOIN Users u ON c.user_id = u.id
+    ORDER BY c.created_at DESC
+  `;
+  db.query(query, (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error", details: err });
+    res.json(results);
+  });
+});
+
+// ===================== START SERVER =====================
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
