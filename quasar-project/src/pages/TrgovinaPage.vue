@@ -58,9 +58,13 @@
         <q-item v-for="(item, index) in cart" :key="index" class="text-white">
           <q-item-section>
             <q-item-label class="text-white">{{ item.name }}</q-item-label>
-            <q-item-label caption class="text-white">{{ item.price }} €</q-item-label>
+            <q-item-label caption class="text-white">
+              {{ item.price }} € x {{ item.quantity }} = {{ item.price * item.quantity }} €
+            </q-item-label>
           </q-item-section>
-          <q-item-section side>
+          <q-item-section side class="row items-center q-gutter-xs">
+            <q-btn dense flat icon="remove" color="white" @click="decreaseQuantity(index)"/>
+            <q-btn dense flat icon="add" color="white" @click="increaseQuantity(index)"/>
             <q-btn dense flat icon="delete" color="white" @click="removeFromCart(index)"/>
           </q-item-section>
         </q-item>
@@ -88,7 +92,7 @@ const newProduct = reactive({ name: '', description: '', price: 0, image: '' })
 const cart = reactive([])
 
 const totalPrice = computed(() => {
-  return cart.reduce((sum, item) => sum + Number(item.price), 0)
+  return cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
 })
 
 // Ucitaj iz localStorage na pocetku
@@ -148,13 +152,34 @@ function finishEdit(index) {
 
 // Dodavanje u košaricu
 function addToCart(product) {
-  cart.push(product)
+  const existing = cart.find(p => p.name === product.name)
+  if (existing) {
+    existing.quantity++
+  } else {
+    cart.push({ ...product, quantity: 1 })
+  }
   saveCart()
 }
 
 // Uklanjanje iz košarice
 function removeFromCart(index) {
   cart.splice(index, 1)
+  saveCart()
+}
+
+// Povećaj količinu
+function increaseQuantity(index) {
+  cart[index].quantity++
+  saveCart()
+}
+
+// Smanji količinu
+function decreaseQuantity(index) {
+  if (cart[index].quantity > 1) {
+    cart[index].quantity--
+  } else {
+    cart.splice(index, 1)
+  }
   saveCart()
 }
 
